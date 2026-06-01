@@ -1,5 +1,9 @@
 # MidiMute
 
+[![Build](https://github.com/pembrock/MidiMute/actions/workflows/build.yml/badge.svg)](https://github.com/pembrock/MidiMute/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/pembrock/MidiMute)](https://github.com/pembrock/MidiMute/releases/latest)
+[![License](https://img.shields.io/github/license/pembrock/MidiMute)](LICENSE)
+
 Control Windows application volume with a MIDI device.
 
 MidiMute is a small Windows utility for binding MIDI keys to per-app audio actions. It is useful when you want quick hardware control over Discord, a browser, music, games, or the master output without opening the Windows volume mixer.
