@@ -22,9 +22,11 @@ MidiMute is a small Windows utility for binding MIDI keys to per-app audio actio
 
 The recommended way to use MidiMute is the portable release build:
 
-1. Download the latest `MidiMute-*-win-x64-portable.zip` from GitHub Releases.
+1. Download the latest `MidiMute-*-win-x64-portable.zip` from [GitHub Releases](https://github.com/pembrock/MidiMute/releases/latest).
 2. Extract the archive to any folder.
 3. Run `MidiMute.exe`.
+
+Current release: [MidiMute 0.1.0](https://github.com/pembrock/MidiMute/releases/tag/v0.1.0).
 
 No installer is required.
 
