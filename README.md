@@ -6,6 +6,8 @@ MidiMute is a small Windows utility for binding MIDI keys to per-app audio actio
 
 ![MidiMute main window](assets/screenshots/main-window.png)
 
+![MidiMute selected app with MIDI bindings](assets/screenshots/selected-app.png)
+
 ## Features
 
 - Per-app volume control for active Windows audio sessions.
