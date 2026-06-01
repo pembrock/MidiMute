@@ -77,6 +77,14 @@ dotnet publish MidiMute\MidiMute.csproj -c Release -r win-x64 --self-contained t
 
 MidiMute is an early Windows release. The core workflow is usable, but feedback and bug reports are welcome.
 
+## Known Limitations
+
+- Windows only.
+- Per-app control depends on Windows audio sessions.
+- Some applications may not expose controllable audio sessions until they play sound.
+- Some system or protected processes may not be controllable.
+- MIDI control depends on the connected device and its MIDI message behavior.
+
 ## License
 
 MIT
