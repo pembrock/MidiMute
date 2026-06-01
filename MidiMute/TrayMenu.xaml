@@ -1,0 +1,26 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:tb="http://www.hardcodet.net/taskbar"
+                    xmlns:local="clr-namespace:MidiMute">
+
+    <ContextMenu x:Key="TrayContextMenu"
+                 DataContext="{x:Static local:TrayMenuViewModel.Instance}">
+
+        <!-- Статус MIDI -->
+        <MenuItem Header="{DynamicResource Main.MidiNotFound}" IsHitTestVisible="False" FontWeight="Medium"/>
+        <Separator/>
+
+        <MenuItem Header="{DynamicResource Menu.Open}" Command="{Binding ShowCommand}"
+                  FontWeight="Medium"/>
+
+        <Separator/>
+
+        <MenuItem x:Name="BypassMenuItem" Header="{DynamicResource Tray.BypassOff}"
+                  Command="{Binding BypassCommand}"/>
+
+        <Separator/>
+
+        <MenuItem Header="{DynamicResource Menu.Exit}" Command="{Binding ExitCommand}"/>
+    </ContextMenu>
+
+</ResourceDictionary>

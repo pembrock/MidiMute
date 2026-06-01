@@ -1,0 +1,124 @@
+<Window x:Class="MidiMute.ConfirmDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MidiMute" SizeToContent="Height" Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        WindowStyle="None"
+        AllowsTransparency="True">
+
+    <Window.Resources>
+        <Style x:Key="DialogButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource BgHover}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="{DynamicResource BgPrimary}"
+            BorderBrush="{DynamicResource BorderBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="42"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0"
+                    Background="{DynamicResource BgSecondary}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="0,0,0,1"
+                    CornerRadius="8,8,0,0"
+                    MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid Margin="16,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Image Source="tray32.ico" Width="16" Height="16" Margin="0,0,8,0"
+                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                        <TextBlock x:Name="TitleBarLabel" FontSize="13" FontWeight="Medium"
+                                   Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Style="{StaticResource DialogButton}"
+                            Content="x"
+                            ToolTip="{DynamicResource About.CloseTooltip}"
+                            BorderThickness="0"
+                            Padding="8,2"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Click="CancelButton_Click"/>
+                </Grid>
+            </Border>
+
+            <StackPanel Grid.Row="1" Margin="24" VerticalAlignment="Center">
+                <TextBlock x:Name="TitleLabel" FontSize="14" FontWeight="Medium"
+                           Foreground="{DynamicResource TextPrimary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                <TextBlock x:Name="MessageLabel" FontSize="12"
+                           Foreground="{DynamicResource TextSecondary}" TextWrapping="Wrap" Margin="0,0,0,24"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Style="{StaticResource DialogButton}"
+                            Content="{DynamicResource Common.Cancel}" Margin="0,0,6,0"
+                            Padding="0,10" Cursor="Hand" Click="CancelButton_Click"
+                            ToolTip="{DynamicResource Common.Cancel}"/>
+
+                    <Button Grid.Column="1" x:Name="ConfirmBtn" Margin="6,0,0,0"
+                            Padding="0,10" Cursor="Hand" Click="ConfirmButton_Click"
+                            ToolTip="{DynamicResource Common.Confirm}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource DialogPrimaryButtonText}"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="FontSize" Value="13"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

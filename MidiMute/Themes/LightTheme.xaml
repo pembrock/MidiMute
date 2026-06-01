@@ -1,0 +1,20 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="BgPrimary" Color="#F5F6F8"/>
+    <SolidColorBrush x:Key="BgSecondary" Color="#ECEFF3"/>
+    <SolidColorBrush x:Key="BgCard" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="BgHover" Color="#E2E7EF"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="#5B56DC"/>
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#4944C4"/>
+    <SolidColorBrush x:Key="AccentSoftBrush" Color="#E7E5FF"/>
+    <SolidColorBrush x:Key="TextPrimary" Color="#20232A"/>
+    <SolidColorBrush x:Key="TextSecondary" Color="#667085"/>
+    <SolidColorBrush x:Key="MutedRed" Color="#C73636"/>
+    <SolidColorBrush x:Key="MutedBg" Color="#FDE8E8"/>
+    <SolidColorBrush x:Key="ActiveGreen" Color="#188460"/>
+    <SolidColorBrush x:Key="BadgeBg" Color="#DFF5EC"/>
+    <SolidColorBrush x:Key="BypassBg" Color="#FFF0D2"/>
+    <SolidColorBrush x:Key="BypassFg" Color="#9A6700"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="#CFD5E0"/>
+    <SolidColorBrush x:Key="DialogPrimaryButtonText" Color="#FFFFFF"/>
+</ResourceDictionary>

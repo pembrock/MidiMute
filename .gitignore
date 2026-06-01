@@ -1,0 +1,24 @@
+# Build output
+bin/
+obj/
+.codex-build/
+artifacts/
+
+# IDE and user-local files
+.vs/
+.vscode/
+*.user
+*.suo
+*.rsuser
+
+# Debug symbols and logs
+*.pdb
+*.log
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# NuGet
+*.nupkg
+packages/
