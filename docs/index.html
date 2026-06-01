@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MidiMute - MIDI volume control for Windows</title>
+  <meta name="description" content="Control per-app Windows volume with MIDI devices.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="MidiMute home">
+      <img src="assets/tray32.ico" alt="" width="24" height="24">
+      <span>MidiMute</span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="https://github.com/pembrock/MidiMute">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Open-source Windows utility</p>
+        <h1>Control app volume with your MIDI device.</h1>
+        <p class="lead">
+          Bind MIDI keys to mute, lower, or set volume for individual Windows apps
+          without opening the volume mixer.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/pembrock/MidiMute/releases/latest">Download portable build</a>
+          <a class="button secondary" href="https://github.com/pembrock/MidiMute">View on GitHub</a>
+        </div>
+        <dl class="facts" aria-label="Project facts">
+          <div>
+            <dt>Platform</dt>
+            <dd>Windows</dd>
+          </div>
+          <div>
+            <dt>Current release</dt>
+            <dd>0.1.0</dd>
+          </div>
+          <div>
+            <dt>Install</dt>
+            <dd>Portable</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="hero-media" aria-label="MidiMute screenshot">
+        <img src="assets/selected-app.png" alt="MidiMute showing Yandex selected with MIDI bindings">
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="section-heading">
+        <p class="eyebrow">What it does</p>
+        <h2>Fast audio control, mapped to hardware.</h2>
+      </div>
+      <div class="feature-grid">
+        <article>
+          <h3>Per-app volume</h3>
+          <p>Control active Windows audio sessions for browsers, music apps, games, calls, and more.</p>
+        </article>
+        <article>
+          <h3>MIDI bindings</h3>
+          <p>Map notes to toggle mute, hold mute, volume up/down, set volume, or temporary lowering.</p>
+        </article>
+        <article>
+          <h3>Master output</h3>
+          <p>Bind MIDI controls to the main Windows output when you need a global fallback.</p>
+        </article>
+        <article>
+          <h3>Portable setup</h3>
+          <p>Download, extract, and run. Settings can be imported, exported, and backed up.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="showcase">
+      <img src="assets/main-window.png" alt="MidiMute main window with running applications">
+    </section>
+
+    <section class="section split" id="how">
+      <div class="section-heading">
+        <p class="eyebrow">Workflow</p>
+        <h2>Set it up in a few clicks.</h2>
+      </div>
+      <ol class="steps">
+        <li>
+          <span>1</span>
+          <div>
+            <h3>Connect a MIDI device</h3>
+            <p>MidiMute detects available MIDI inputs and reconnects automatically.</p>
+          </div>
+        </li>
+        <li>
+          <span>2</span>
+          <div>
+            <h3>Select an app</h3>
+            <p>Pick the app or master output you want to control.</p>
+          </div>
+        </li>
+        <li>
+          <span>3</span>
+          <div>
+            <h3>Add bindings</h3>
+            <p>Press a MIDI key, choose an action, and keep working without opening the mixer.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="download">
+      <div>
+        <p class="eyebrow">Early release</p>
+        <h2>Try MidiMute 0.1.0</h2>
+        <p>
+          MidiMute is Windows-only and depends on Windows audio sessions. Some apps may appear
+          only after they start playing sound.
+        </p>
+      </div>
+      <a class="button primary" href="https://github.com/pembrock/MidiMute/releases/latest">Download from GitHub</a>
+    </section>
+  </main>
+
+  <footer>
+    <span>MidiMute</span>
+    <a href="https://github.com/pembrock/MidiMute">GitHub</a>
+    <a href="https://github.com/pembrock/MidiMute/blob/main/LICENSE">MIT License</a>
+  </footer>
+</body>
+</html>
