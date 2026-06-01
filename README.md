@@ -89,6 +89,18 @@ MidiMute is an early Windows release. The core workflow is usable, but feedback 
 - Some system or protected processes may not be controllable.
 - MIDI control depends on the connected device and its MIDI message behavior.
 
+## Contributing
+
+Issues and pull requests are welcome.
+
+Before opening a bug report, please check the known limitations above and include your MidiMute version, Windows version, MIDI device, and steps to reproduce the issue.
+
+For pull requests, please keep changes focused and make sure the project builds:
+
+```powershell
+dotnet build MidiMute.slnx
+```
+
 ## License
 
 MIT
