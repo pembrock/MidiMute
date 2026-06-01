@@ -1,0 +1,64 @@
+name: Bug report
+description: Report a problem with MidiMute
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the problem and what you expected to happen.
+      placeholder: MidiMute did X, but I expected Y.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the steps that reproduce the issue.
+      placeholder: |
+        1. Open MidiMute
+        2. Select an application
+        3. Press a MIDI key
+        4. See the issue
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: MidiMute version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: "Windows 11 24H2"
+    validations:
+      required: false
+
+  - type: input
+    id: midi-device
+    attributes:
+      label: MIDI device
+      placeholder: "AKAI MPK mini, SE25, etc."
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Attach screenshots or paste relevant lines from the diagnostic log if available.
+      render: text
+    validations:
+      required: false

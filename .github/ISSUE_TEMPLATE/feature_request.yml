@@ -1,0 +1,43 @@
+name: Feature request
+description: Suggest an improvement or new feature for MidiMute
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the workflow, annoyance, or limitation behind the request.
+      placeholder: I want to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Suggested solution
+      description: Describe what you would like MidiMute to do.
+      placeholder: It would be useful if MidiMute could...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional. Mention any other approach you considered.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Optional. Add screenshots, examples, or device details if useful.
+    validations:
+      required: false
