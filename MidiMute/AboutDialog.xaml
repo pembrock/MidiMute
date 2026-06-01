@@ -118,8 +118,13 @@
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="GitHub"
                                    Foreground="{DynamicResource TextSecondary}" Margin="0,0,12,0"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{DynamicResource Common.NotSet}"
-                                   Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1"
+                                   Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap">
+                            <Hyperlink NavigateUri="https://github.com/pembrock/MidiMute"
+                                       RequestNavigate="GitHubLink_RequestNavigate">
+                                github.com/pembrock/MidiMute
+                            </Hyperlink>
+                        </TextBlock>
                     </Grid>
                 </Border>
 

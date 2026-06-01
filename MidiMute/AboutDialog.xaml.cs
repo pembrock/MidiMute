@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace MidiMute
 {
@@ -68,6 +69,12 @@ namespace MidiMute
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void GitHubLink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            OpenPath(e.Uri.AbsoluteUri);
+            e.Handled = true;
         }
     }
 }
