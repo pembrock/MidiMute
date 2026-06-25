@@ -27,7 +27,10 @@ namespace MidiMute
 
         private void Exit(object? _)
         {
-            Application.Current.Shutdown();
+            if (App.MainWin != null)
+                App.MainWin.ExitApplication();
+            else
+                Application.Current.Shutdown();
         }
     }
 

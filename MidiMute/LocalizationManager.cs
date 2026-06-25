@@ -45,13 +45,13 @@ namespace MidiMute
 
         private static void ApplyLanguage(AppLanguageMode effectiveLanguage)
         {
-            var source = new Uri(
-                effectiveLanguage == AppLanguageMode.Russian ? RussianStringsPath : EnglishStringsPath,
-                UriKind.Relative);
+            var languagePath = effectiveLanguage == AppLanguageMode.Russian ? RussianStringsPath : EnglishStringsPath;
+            var source = new Uri($"pack://application:,,,/MidiMute;component/{languagePath}", UriKind.Absolute);
 
             var dictionaries = Application.Current.Resources.MergedDictionaries;
             var existingLanguage = dictionaries.FirstOrDefault(dictionary =>
-                dictionary.Source?.OriginalString is RussianStringsPath or EnglishStringsPath);
+                dictionary.Source?.OriginalString.EndsWith(RussianStringsPath, StringComparison.OrdinalIgnoreCase) == true ||
+                dictionary.Source?.OriginalString.EndsWith(EnglishStringsPath, StringComparison.OrdinalIgnoreCase) == true);
 
             var languageDictionary = new ResourceDictionary { Source = source };
 

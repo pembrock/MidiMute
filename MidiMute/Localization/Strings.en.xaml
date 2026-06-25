@@ -74,6 +74,7 @@
     <sys:String x:Key="Status.AppUnavailable">application is not running</sys:String>
     <sys:String x:Key="Status.RepeatIgnored">repeat ignored</sys:String>
     <sys:String x:Key="Status.NoBinding">no binding</sys:String>
+    <sys:String x:Key="Status.Bypassed">bypass is active</sys:String>
     <sys:String x:Key="Status.NoteFormat">{0} (#{1}): {2}</sys:String>
 
     <sys:String x:Key="Action.MuteToggle">Toggle mute</sys:String>

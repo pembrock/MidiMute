@@ -78,13 +78,13 @@ namespace MidiMute
 
         private static void ApplyTheme(AppThemeMode effectiveTheme)
         {
-            var source = new Uri(
-                effectiveTheme == AppThemeMode.Light ? LightThemePath : DarkThemePath,
-                UriKind.Relative);
+            var themePath = effectiveTheme == AppThemeMode.Light ? LightThemePath : DarkThemePath;
+            var source = new Uri($"pack://application:,,,/MidiMute;component/{themePath}", UriKind.Absolute);
 
             var dictionaries = Application.Current.Resources.MergedDictionaries;
             var existingTheme = dictionaries.FirstOrDefault(dictionary =>
-                dictionary.Source?.OriginalString is DarkThemePath or LightThemePath);
+                dictionary.Source?.OriginalString.EndsWith(DarkThemePath, StringComparison.OrdinalIgnoreCase) == true ||
+                dictionary.Source?.OriginalString.EndsWith(LightThemePath, StringComparison.OrdinalIgnoreCase) == true);
 
             var themeDictionary = new ResourceDictionary { Source = source };
 

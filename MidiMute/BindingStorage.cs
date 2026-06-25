@@ -70,6 +70,7 @@ namespace MidiMute
 
         public SavedData Import(string filePath)
         {
+            ValidateImportedFile(filePath);
             return LoadFromFile(filePath);
         }
 
@@ -112,6 +113,7 @@ namespace MidiMute
                         DisplayName = s.DisplayName,
                         ExecutablePath = s.ExecutablePath
                     }))
+                .Where(profile => !string.Equals(profile.ProcessName, "__master__", StringComparison.OrdinalIgnoreCase))
                 .GroupBy(profile => profile.ProcessName, StringComparer.OrdinalIgnoreCase)
                 .Select(group => group
                     .OrderByDescending(profile => !string.IsNullOrWhiteSpace(profile.ExecutablePath))
@@ -157,7 +159,77 @@ namespace MidiMute
         private static SavedData LoadFromFile(string filePath)
         {
             var json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<SavedData>(json) ?? new();
+            var data = JsonSerializer.Deserialize<SavedData>(json) ?? new();
+            Normalize(data);
+            return data;
+        }
+
+        private static void Normalize(SavedData data)
+        {
+            data.Sessions ??= new();
+            data.HiddenProcessNames ??= new();
+            data.AppProfiles ??= new();
+
+            data.Sessions = data.Sessions
+                .Where(session => session != null && !string.IsNullOrWhiteSpace(session.ProcessName))
+                .Select(session =>
+                {
+                    session.Bindings ??= new();
+                    session.DisplayName = string.IsNullOrWhiteSpace(session.DisplayName)
+                        ? session.ProcessName
+                        : session.DisplayName;
+                    session.Bindings = session.Bindings
+                        .Where(binding => binding != null && Enum.IsDefined(binding.Action))
+                        .Select(binding =>
+                        {
+                            binding.NoteNumber = Math.Clamp(binding.NoteNumber, 0, 127);
+                            binding.NoteName ??= "";
+                            binding.VolumeStep = binding.Action switch
+                            {
+                                BindingAction.VolumeUp or BindingAction.VolumeDown => Math.Clamp(binding.VolumeStep, 1, 25),
+                                BindingAction.SetVolume or BindingAction.HoldVolume => Math.Clamp(binding.VolumeStep, 0, 100),
+                                _ => binding.VolumeStep
+                            };
+                            return binding;
+                        })
+                        .ToList();
+                    return session;
+                })
+                .ToList();
+
+            data.HiddenProcessNames = data.HiddenProcessNames
+                .Where(name => !string.IsNullOrWhiteSpace(name) && name != "__master__")
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            data.AppProfiles = data.AppProfiles
+                .Where(profile => profile != null &&
+                                  !string.IsNullOrWhiteSpace(profile.ProcessName) &&
+                                  !string.Equals(profile.ProcessName, "__master__", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (!Enum.IsDefined(data.AppThemeMode))
+                data.AppThemeMode = AppThemeMode.Auto;
+            if (!Enum.IsDefined(data.AppLanguageMode))
+                data.AppLanguageMode = AppLanguageMode.Auto;
+        }
+
+        private static void ValidateImportedFile(string filePath)
+        {
+            using var document = JsonDocument.Parse(File.ReadAllText(filePath));
+            if (document.RootElement.ValueKind != JsonValueKind.Object)
+                throw new InvalidDataException("The selected file is not a MidiMute settings object.");
+
+            var root = document.RootElement;
+            var hasRecognizableProperty = root.TryGetProperty(nameof(SavedData.Sessions), out _) ||
+                                            root.TryGetProperty(nameof(SavedData.BypassEnabled), out _) ||
+                                            root.TryGetProperty(nameof(SavedData.MidiDeviceName), out _) ||
+                                            root.TryGetProperty(nameof(SavedData.HiddenProcessNames), out _) ||
+                                            root.TryGetProperty(nameof(SavedData.AppProfiles), out _) ||
+                                            root.TryGetProperty(nameof(SavedData.AppThemeMode), out _) ||
+                                            root.TryGetProperty(nameof(SavedData.AppLanguageMode), out _);
+
+            if (!hasRecognizableProperty)
+                throw new InvalidDataException("The selected file does not contain recognizable MidiMute settings.");
         }
     }
 

@@ -30,6 +30,7 @@ namespace MidiMute
         private bool _updatingMidiDevices;
         private bool _updatingVolumeDisplay;
         private bool _refreshingAudioSessions;
+        private bool _allowClose;
         private readonly object _volumeApplyLock = new();
         private bool _volumeApplyWorkerRunning;
         private string? _pendingVolumeProcessName;
@@ -320,7 +321,18 @@ namespace MidiMute
 
         private void OnNotePressed(int noteNumber, string noteName)
         {
-            if (_bypassEnabled) return; // игнорируем все нажатия
+            if (_bypassEnabled)
+            {
+                Dispatcher.BeginInvoke(() =>
+                {
+                    LastKeyLabel.Text = LocalizationManager.Format(
+                        "Status.NoteFormat",
+                        noteName,
+                        noteNumber,
+                        LocalizationManager.Text("Status.Bypassed"));
+                });
+                return;
+            }
 
             var muteToggleAllowed = CanToggleMute(noteNumber);
 
@@ -334,9 +346,6 @@ namespace MidiMute
                 // Проходим по всем сессиям и выполняем привязанные действия
             foreach (var session in _sessions)
                 {
-                    if (session.IsHidden)
-                        continue;
-
                     foreach (var binding in session.Bindings)
                     {
                         if (binding.NoteNumber != noteNumber) continue;
@@ -1375,8 +1384,20 @@ namespace MidiMute
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            e.Cancel = true;
-            Hide();
+            if (!_allowClose)
+            {
+                e.Cancel = true;
+                Hide();
+                return;
+            }
+
+            base.OnClosing(e);
+        }
+
+        public void ExitApplication()
+        {
+            _allowClose = true;
+            Application.Current.Shutdown();
         }
 
         private void TitleBar_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

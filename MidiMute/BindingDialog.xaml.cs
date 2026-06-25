@@ -182,7 +182,7 @@ namespace MidiMute
 
         private void UpdateConflictWarning()
         {
-            if (_noteNumber == 0 || !_conflictsByNote.TryGetValue(_noteNumber, out var conflict))
+            if (string.IsNullOrEmpty(_noteName) || !_conflictsByNote.TryGetValue(_noteNumber, out var conflict))
             {
                 ConflictWarningPanel.Visibility = Visibility.Collapsed;
                 ConflictWarningLabel.Text = "";

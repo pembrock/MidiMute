@@ -73,7 +73,7 @@ namespace MidiMute
                 bypassItem.Foreground = bypass
                     ? new System.Windows.Media.SolidColorBrush(
                         System.Windows.Media.Color.FromRgb(226, 160, 74))
-                    : System.Windows.Media.Brushes.Black;
+                    : System.Windows.SystemColors.MenuTextBrush;
             }
         }
     }
