@@ -9,7 +9,8 @@
         Unmute = 4,
         SetVolume = 5,
         HoldMute = 6,
-        HoldVolume = 7
+        HoldVolume = 7,
+        RestartAudioDevice = 8
     }
 
     public class MidiBinding

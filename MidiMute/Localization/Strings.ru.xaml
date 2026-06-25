@@ -42,6 +42,7 @@
     <sys:String x:Key="Tooltip.EditBinding">Редактировать привязку</sys:String>
     <sys:String x:Key="Tooltip.RemoveBinding">Удалить привязку</sys:String>
     <sys:String x:Key="Tooltip.MidiDevice">MIDI устройство</sys:String>
+    <sys:String x:Key="Tooltip.RestartAudioDevice">Аудиоустройство для перезапуска через MIDI-действие</sys:String>
 
     <sys:String x:Key="Main.AppListTitle">ЗАПУЩЕННЫЕ ПРИЛОЖЕНИЯ</sys:String>
     <sys:String x:Key="Main.AppListEditingTitle">РЕДАКТИРОВАНИЕ СПИСКА</sys:String>
@@ -76,6 +77,11 @@
     <sys:String x:Key="Status.NoBinding">нет привязки</sys:String>
     <sys:String x:Key="Status.Bypassed">режим Bypass включён</sys:String>
     <sys:String x:Key="Status.NoteFormat">{0} (#{1}): {2}</sys:String>
+    <sys:String x:Key="Status.AudioDeviceRestartNotConfigured">аудиоустройство не выбрано</sys:String>
+    <sys:String x:Key="Status.AudioDeviceRestartAlreadyRunning">перезапуск аудиоустройства уже выполняется</sys:String>
+    <sys:String x:Key="Status.AudioDeviceRestartStartingFormat">Перезапуск аудиоустройства: {0}</sys:String>
+    <sys:String x:Key="Status.AudioDeviceRestartDoneFormat">Аудиоустройство перезапущено: {0}</sys:String>
+    <sys:String x:Key="Status.AudioDeviceRestartFailed">Не удалось перезапустить аудиоустройство. Возможно, нужны права администратора.</sys:String>
 
     <sys:String x:Key="Action.MuteToggle">Вкл / Выкл звук</sys:String>
     <sys:String x:Key="Action.Mute">Выключить звук</sys:String>
@@ -85,6 +91,8 @@
     <sys:String x:Key="Action.VolumeUp">Громкость +</sys:String>
     <sys:String x:Key="Action.VolumeDown">Громкость −</sys:String>
     <sys:String x:Key="Action.SetVolume">Установить громкость</sys:String>
+    <sys:String x:Key="Action.RestartAudioDevice">Перезапустить аудиоустройство</sys:String>
+    <sys:String x:Key="Action.RestartAudioDeviceDetail">Отключить и включить выбранное аудиоустройство Windows</sys:String>
     <sys:String x:Key="Action.StepPerPressFormat">На {0}% за нажатие</sys:String>
     <sys:String x:Key="Action.ToVolumeFormat">До {0}%</sys:String>
     <sys:String x:Key="Action.HoldToVolumeFormat">До {0}% пока удерживается</sys:String>

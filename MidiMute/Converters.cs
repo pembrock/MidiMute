@@ -33,6 +33,7 @@ namespace MidiMute
                 BindingAction.VolumeUp => LocalizationManager.Text("Action.VolumeUp"),
                 BindingAction.VolumeDown => LocalizationManager.Text("Action.VolumeDown"),
                 BindingAction.SetVolume => LocalizationManager.Text("Action.SetVolume"),
+                BindingAction.RestartAudioDevice => LocalizationManager.Text("Action.RestartAudioDevice"),
                 _ => binding.Action.ToString()
             };
         }
@@ -54,6 +55,7 @@ namespace MidiMute
                 BindingAction.VolumeDown => LocalizationManager.Format("Action.StepPerPressFormat", binding.VolumeStep),
                 BindingAction.SetVolume => LocalizationManager.Format("Action.ToVolumeFormat", binding.VolumeStep),
                 BindingAction.HoldVolume => LocalizationManager.Format("Action.HoldToVolumeFormat", binding.VolumeStep),
+                BindingAction.RestartAudioDevice => LocalizationManager.Text("Action.RestartAudioDeviceDetail"),
                 _ => ""
             };
         }

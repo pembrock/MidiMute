@@ -156,6 +156,7 @@
                     <ComboBoxItem Content="{DynamicResource Action.VolumeUp}" Tag="VolumeUp"/>
                     <ComboBoxItem Content="{DynamicResource Action.VolumeDown}" Tag="VolumeDown"/>
                     <ComboBoxItem Content="{DynamicResource Action.SetVolume}" Tag="SetVolume"/>
+                    <ComboBoxItem Content="{DynamicResource Action.RestartAudioDevice}" Tag="RestartAudioDevice"/>
                 </ComboBox>
 
                 <!-- Шаг громкости — показывается только для Volume -->

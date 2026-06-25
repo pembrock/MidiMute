@@ -21,7 +21,8 @@ namespace MidiMute
             IEnumerable<string> hiddenProcessNames,
             IEnumerable<SavedAppProfile> appProfiles,
             AppThemeMode themeMode,
-            AppLanguageMode languageMode)
+            AppLanguageMode languageMode,
+            string? restartAudioDeviceInstanceId)
         {
             Directory.CreateDirectory(SettingsDirectory);
             SaveToFile(FilePath, CreateSavedData(
@@ -31,7 +32,8 @@ namespace MidiMute
                 hiddenProcessNames,
                 appProfiles,
                 themeMode,
-                languageMode));
+                languageMode,
+                restartAudioDeviceInstanceId));
         }
 
         public SavedData Load()
@@ -56,7 +58,8 @@ namespace MidiMute
             IEnumerable<string> hiddenProcessNames,
             IEnumerable<SavedAppProfile> appProfiles,
             AppThemeMode themeMode,
-            AppLanguageMode languageMode)
+            AppLanguageMode languageMode,
+            string? restartAudioDeviceInstanceId)
         {
             SaveToFile(filePath, CreateSavedData(
                 sessions,
@@ -65,7 +68,8 @@ namespace MidiMute
                 hiddenProcessNames,
                 appProfiles,
                 themeMode,
-                languageMode));
+                languageMode,
+                restartAudioDeviceInstanceId));
         }
 
         public SavedData Import(string filePath)
@@ -102,7 +106,8 @@ namespace MidiMute
             IEnumerable<string> hiddenProcessNames,
             IEnumerable<SavedAppProfile> appProfiles,
             AppThemeMode themeMode,
-            AppLanguageMode languageMode)
+            AppLanguageMode languageMode,
+            string? restartAudioDeviceInstanceId)
         {
             var profilesByProcess = appProfiles
                 .Concat(sessions
@@ -135,6 +140,7 @@ namespace MidiMute
                     }).ToList(),
                 BypassEnabled = bypassEnabled,
                 MidiDeviceName = midiDeviceName,
+                RestartAudioDeviceInstanceId = restartAudioDeviceInstanceId,
                 AppThemeMode = themeMode,
                 AppLanguageMode = languageMode,
                 HiddenProcessNames = hiddenProcessNames
@@ -225,6 +231,7 @@ namespace MidiMute
                                             root.TryGetProperty(nameof(SavedData.MidiDeviceName), out _) ||
                                             root.TryGetProperty(nameof(SavedData.HiddenProcessNames), out _) ||
                                             root.TryGetProperty(nameof(SavedData.AppProfiles), out _) ||
+                                            root.TryGetProperty(nameof(SavedData.RestartAudioDeviceInstanceId), out _) ||
                                             root.TryGetProperty(nameof(SavedData.AppThemeMode), out _) ||
                                             root.TryGetProperty(nameof(SavedData.AppLanguageMode), out _);
 
@@ -253,6 +260,7 @@ namespace MidiMute
         public List<SavedSession> Sessions { get; set; } = new();
         public bool BypassEnabled { get; set; }
         public string? MidiDeviceName { get; set; }
+        public string? RestartAudioDeviceInstanceId { get; set; }
         public AppThemeMode AppThemeMode { get; set; } = AppThemeMode.Auto;
         public AppLanguageMode AppLanguageMode { get; set; } = AppLanguageMode.Auto;
         public List<string> HiddenProcessNames { get; set; } = new();

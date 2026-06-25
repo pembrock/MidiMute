@@ -11,6 +11,7 @@ namespace MidiMute
     public partial class MainWindow : Window
     {
         private readonly AudioService _audio = new();
+        private readonly AudioDeviceRestartService _audioDeviceRestart = new();
         private readonly MidiService _midi = new();
         private readonly DispatcherTimer _audioSessionRefreshTimer = new();
         private readonly ObservableCollection<AppSession> _sessions = new();
@@ -37,6 +38,9 @@ namespace MidiMute
         private float _pendingVolumeValue;
         private string _audioSessionSnapshot = "";
         private string? _selectedMidiDeviceName;
+        private string? _selectedRestartAudioDeviceInstanceId;
+        private bool _updatingRestartAudioDevices;
+        private bool _restartingAudioDevice;
         private static readonly TimeSpan MuteToggleDebounce = TimeSpan.FromMilliseconds(200);
         private static readonly TimeSpan AudioSessionRefreshInterval = TimeSpan.FromSeconds(5);
         private static readonly TimeSpan MidiHighlightDuration = TimeSpan.FromMilliseconds(900);
@@ -57,6 +61,7 @@ namespace MidiMute
             UpdateAutoStartMenuItem();
             AppListBox.ItemsSource = _sessions;
             LoadSessions(startupSettings);
+            RefreshRestartAudioDeviceList(startupSettings.RestartAudioDeviceInstanceId);
             ConnectMidi();
             StartAudioSessionAutoRefresh();
             //MessageBox.Show(_audio.GetAllDevicesDebugInfo());
@@ -93,6 +98,7 @@ namespace MidiMute
             foreach (var processName in saved.HiddenProcessNames.Where(name => name != "__master__"))
                 _hiddenProcessNames.Add(processName);
             _selectedMidiDeviceName = saved.MidiDeviceName;
+            _selectedRestartAudioDeviceInstanceId = saved.RestartAudioDeviceInstanceId;
 
             foreach (var session in current)
             {
@@ -351,7 +357,7 @@ namespace MidiMute
                         if (binding.NoteNumber != noteNumber) continue;
 
                         matchingBindingFound = true;
-                        if (!session.IsAvailable)
+                        if (!session.IsAvailable && binding.Action != BindingAction.RestartAudioDevice)
                         {
                             unavailableBindingFound = true;
                             continue;
@@ -425,6 +431,11 @@ namespace MidiMute
                                 SetSessionVolume(session, binding.VolumeStep);
                                 actionExecuted = true;
                                 bindingExecuted = true;
+                                break;
+
+                            case BindingAction.RestartAudioDevice:
+                                actionExecuted = TryRestartSelectedAudioDevice(noteName, noteNumber);
+                                bindingExecuted = actionExecuted;
                                 break;
                         }
 
@@ -973,8 +984,107 @@ namespace MidiMute
                 BindingAction.VolumeDown => LocalizationManager.Format("Action.VolumeDownFormat", binding.VolumeStep),
                 BindingAction.SetVolume => LocalizationManager.Format("Action.SetVolumeFormat", binding.VolumeStep),
                 BindingAction.HoldVolume => LocalizationManager.Format("Action.HoldVolumeFormat", binding.VolumeStep),
+                BindingAction.RestartAudioDevice => LocalizationManager.Text("Action.RestartAudioDevice"),
                 _ => binding.Action.ToString()
             };
+        }
+
+        private void RefreshRestartAudioDeviceList(string? selectedInstanceId = null)
+        {
+            IReadOnlyList<AudioDeviceInfo> devices;
+            try
+            {
+                devices = _audioDeviceRestart.GetRestartableAudioDevices();
+            }
+            catch (Exception ex)
+            {
+                DiagnosticLog.Error("AudioDeviceRestart", "Failed to enumerate restartable audio devices.", ex);
+                devices = Array.Empty<AudioDeviceInfo>();
+            }
+
+            selectedInstanceId ??= _selectedRestartAudioDeviceInstanceId;
+            _updatingRestartAudioDevices = true;
+            RestartAudioDeviceCombo.ItemsSource = devices;
+
+            var selected = !string.IsNullOrWhiteSpace(selectedInstanceId)
+                ? devices.FirstOrDefault(device => string.Equals(
+                    device.InstanceId,
+                    selectedInstanceId,
+                    StringComparison.OrdinalIgnoreCase))
+                : null;
+
+            RestartAudioDeviceCombo.SelectedItem = selected;
+            _selectedRestartAudioDeviceInstanceId = selected?.InstanceId ?? selectedInstanceId;
+            _updatingRestartAudioDevices = false;
+        }
+
+        private void RestartAudioDeviceCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_updatingRestartAudioDevices)
+                return;
+
+            _selectedRestartAudioDeviceInstanceId = RestartAudioDeviceCombo.SelectedItem is AudioDeviceInfo device
+                ? device.InstanceId
+                : null;
+            SaveState();
+        }
+
+        private bool TryRestartSelectedAudioDevice(string noteName, int noteNumber)
+        {
+            if (_restartingAudioDevice)
+            {
+                LastKeyLabel.Text = LocalizationManager.Format(
+                    "Status.NoteFormat",
+                    noteName,
+                    noteNumber,
+                    LocalizationManager.Text("Status.AudioDeviceRestartAlreadyRunning"));
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(_selectedRestartAudioDeviceInstanceId))
+            {
+                LastKeyLabel.Text = LocalizationManager.Format(
+                    "Status.NoteFormat",
+                    noteName,
+                    noteNumber,
+                    LocalizationManager.Text("Status.AudioDeviceRestartNotConfigured"));
+                return false;
+            }
+
+            var deviceName = (RestartAudioDeviceCombo.SelectedItem as AudioDeviceInfo)?.DisplayName
+                ?? LocalizationManager.Text("Common.NotSet");
+
+            _restartingAudioDevice = true;
+            LastKeyLabel.Text = LocalizationManager.Format("Status.AudioDeviceRestartStartingFormat", deviceName);
+
+            _ = RestartSelectedAudioDeviceAsync(deviceName);
+            return true;
+        }
+
+        private async Task RestartSelectedAudioDeviceAsync(string deviceName)
+        {
+            try
+            {
+                await _audioDeviceRestart.RestartDeviceAsync(_selectedRestartAudioDeviceInstanceId!);
+                Dispatcher.Invoke(() =>
+                {
+                    LastKeyLabel.Text = LocalizationManager.Format("Status.AudioDeviceRestartDoneFormat", deviceName);
+                    RefreshRestartAudioDeviceList(_selectedRestartAudioDeviceInstanceId);
+                    LoadSessions();
+                });
+            }
+            catch (Exception ex)
+            {
+                DiagnosticLog.Error("AudioDeviceRestart", "Failed to restart audio device.", ex);
+                Dispatcher.Invoke(() =>
+                {
+                    LastKeyLabel.Text = LocalizationManager.Text("Status.AudioDeviceRestartFailed");
+                });
+            }
+            finally
+            {
+                Dispatcher.Invoke(() => _restartingAudioDevice = false);
+            }
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -1131,7 +1241,8 @@ namespace MidiMute
                     _hiddenProcessNames,
                     _appProfiles.Values,
                     _themeMode,
-                    _languageMode);
+                    _languageMode,
+                    _selectedRestartAudioDeviceInstanceId);
                 LastKeyLabel.Text = LocalizationManager.Text("Main.SettingsExported");
             }
             catch (Exception ex)
@@ -1196,6 +1307,7 @@ namespace MidiMute
                 LoadSessions(importedSettings);
                 SaveState();
                 RefreshMidiDeviceList(_selectedMidiDeviceName);
+                RefreshRestartAudioDeviceList(_selectedRestartAudioDeviceInstanceId);
                 _midi.ConnectToDevice(_selectedMidiDeviceName);
                 LastKeyLabel.Text = string.IsNullOrWhiteSpace(backupPath)
                     ? LocalizationManager.Text("Main.SettingsImported")
@@ -1370,7 +1482,8 @@ namespace MidiMute
                 _hiddenProcessNames,
                 _appProfiles.Values,
                 _themeMode,
-                _languageMode);
+                _languageMode,
+                _selectedRestartAudioDeviceInstanceId);
         }
 
         protected override void OnClosed(EventArgs e)

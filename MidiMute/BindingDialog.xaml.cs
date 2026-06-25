@@ -124,6 +124,7 @@ namespace MidiMute
                     "VolumeUp" => BindingAction.VolumeUp,
                     "VolumeDown" => BindingAction.VolumeDown,
                     "SetVolume" => BindingAction.SetVolume,
+                    "RestartAudioDevice" => BindingAction.RestartAudioDevice,
                     _ => BindingAction.MuteToggle
                 };
             }
@@ -172,6 +173,7 @@ namespace MidiMute
                 BindingAction.VolumeUp => "VolumeUp",
                 BindingAction.VolumeDown => "VolumeDown",
                 BindingAction.SetVolume => "SetVolume",
+                BindingAction.RestartAudioDevice => "RestartAudioDevice",
                 _ => "MuteToggle"
             };
 

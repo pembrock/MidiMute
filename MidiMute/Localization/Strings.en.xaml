@@ -42,6 +42,7 @@
     <sys:String x:Key="Tooltip.EditBinding">Edit binding</sys:String>
     <sys:String x:Key="Tooltip.RemoveBinding">Remove binding</sys:String>
     <sys:String x:Key="Tooltip.MidiDevice">MIDI device</sys:String>
+    <sys:String x:Key="Tooltip.RestartAudioDevice">Audio device to restart with the MIDI action</sys:String>
 
     <sys:String x:Key="Main.AppListTitle">RUNNING APPLICATIONS</sys:String>
     <sys:String x:Key="Main.AppListEditingTitle">EDITING LIST</sys:String>
@@ -76,6 +77,11 @@
     <sys:String x:Key="Status.NoBinding">no binding</sys:String>
     <sys:String x:Key="Status.Bypassed">bypass is active</sys:String>
     <sys:String x:Key="Status.NoteFormat">{0} (#{1}): {2}</sys:String>
+    <sys:String x:Key="Status.AudioDeviceRestartNotConfigured">audio device is not selected</sys:String>
+    <sys:String x:Key="Status.AudioDeviceRestartAlreadyRunning">audio device restart is already running</sys:String>
+    <sys:String x:Key="Status.AudioDeviceRestartStartingFormat">Restarting audio device: {0}</sys:String>
+    <sys:String x:Key="Status.AudioDeviceRestartDoneFormat">Audio device restarted: {0}</sys:String>
+    <sys:String x:Key="Status.AudioDeviceRestartFailed">Failed to restart audio device. Administrator approval may be required.</sys:String>
 
     <sys:String x:Key="Action.MuteToggle">Toggle mute</sys:String>
     <sys:String x:Key="Action.Mute">Mute</sys:String>
@@ -85,6 +91,8 @@
     <sys:String x:Key="Action.VolumeUp">Volume +</sys:String>
     <sys:String x:Key="Action.VolumeDown">Volume −</sys:String>
     <sys:String x:Key="Action.SetVolume">Set volume</sys:String>
+    <sys:String x:Key="Action.RestartAudioDevice">Restart audio device</sys:String>
+    <sys:String x:Key="Action.RestartAudioDeviceDetail">Disable and enable the selected Windows audio device</sys:String>
     <sys:String x:Key="Action.StepPerPressFormat">By {0}% per press</sys:String>
     <sys:String x:Key="Action.ToVolumeFormat">To {0}%</sys:String>
     <sys:String x:Key="Action.HoldToVolumeFormat">To {0}% while held</sys:String>

@@ -20,6 +20,7 @@ MidiMute is a small Windows utility for binding MIDI keys to per-app audio actio
 - Master output volume and mute control.
 - MIDI bindings for mute, hold mute, volume up/down, set volume, and temporary volume lowering.
 - Automatic MIDI reconnect and MIDI device selection.
+- Optional MIDI action for restarting a selected Windows audio device.
 - Import, export, and backup of settings.
 - Hide noisy or unwanted apps from the app list.
 - Cached app icons for known applications.
@@ -59,6 +60,14 @@ Diagnostic logs are written to:
 ```text
 %AppData%\MidiMute\diagnostic.log
 ```
+
+## Audio Device Restart
+
+This branch includes an experimental MIDI action for restarting a selected Windows audio device. It is intended for cases where a USB audio interface, such as a Focusrite Scarlett Solo, needs the same kind of reset as disabling and enabling it in Device Manager.
+
+Select the device in the audio-device dropdown, then create a MIDI binding with the `Restart audio device` action. On Windows this operation requires elevation, so the action can show a UAC prompt.
+
+For Voicemeeter setups, enable Voicemeeter's own `Auto Restart Audio Engine (All Device)` option. MidiMute only restarts the Windows device; Voicemeeter should handle its audio-engine restart itself.
 
 ## Build From Source
 

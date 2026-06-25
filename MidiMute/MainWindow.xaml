@@ -629,6 +629,12 @@
                               FontSize="12"
                               ToolTip="{DynamicResource Tooltip.MidiDevice}"
                               SelectionChanged="MidiDeviceCombo_SelectionChanged"/>
+                    <ComboBox x:Name="RestartAudioDeviceCombo" Width="260" Height="24"
+                              Margin="8,0,0,0"
+                              FontSize="12"
+                              DisplayMemberPath="DisplayName"
+                              ToolTip="{DynamicResource Tooltip.RestartAudioDevice}"
+                              SelectionChanged="RestartAudioDeviceCombo_SelectionChanged"/>
                 </StackPanel>
                 <TextBlock Grid.Column="1" x:Name="LastKeyLabel" FontSize="12"
                            Foreground="{DynamicResource TextSecondary}"
