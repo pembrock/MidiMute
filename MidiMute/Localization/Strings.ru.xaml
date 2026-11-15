@@ -141,4 +141,7 @@
     <sys:String x:Key="Tray.MidiConnectedFormat">MIDI: {0} подключено</sys:String>
     <sys:String x:Key="Tray.BypassOn">▶ Bypass — вкл</sys:String>
     <sys:String x:Key="Tray.BypassOff">⏸ Bypass — выкл</sys:String>
+    <sys:String x:Key="Overlay.Muted">Звук выключен</sys:String>
+    <sys:String x:Key="Overlay.Unmuted">Звук включён</sys:String>
+    <sys:String x:Key="Overlay.Volume">Громкость</sys:String>
 </ResourceDictionary>

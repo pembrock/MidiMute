@@ -1,3 +1,4 @@
+using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -103,35 +104,42 @@ try
     var appSource = File.ReadAllText(Path.Combine(repo, "MidiMute", "App.xaml.cs"));
     Check("tray bypass-off uses system menu text", appSource.Contains("SystemColors.MenuTextBrush"));
 
-    var lifecycleCompleted = false;
-    var closeToTrayWorked = false;
-    Exception? lifecycleError = null;
-    var lifecycleThread = new Thread(() =>
+    if (args.Contains("--overlay"))
+        OverlayChecks.Run(repo, Check);
+
+    // Explicit opt-in: starting the real application touches the user's MIDI and settings.
+    if (args.Contains("--lifecycle"))
     {
-        try
+        var lifecycleCompleted = false;
+        var closeToTrayWorked = false;
+        Exception? lifecycleError = null;
+        var lifecycleThread = new Thread(() =>
         {
-            var app = new MidiMute.App();
-            app.InitializeComponent();
-            app.Startup += (_, _) => app.Dispatcher.BeginInvoke(() =>
+            try
             {
-                var window = MidiMute.App.MainWin!;
-                window.Close();
-                closeToTrayWorked = !window.IsVisible;
-                window.ExitApplication();
-            });
-            app.Run();
-            lifecycleCompleted = true;
-        }
-        catch (Exception ex)
-        {
-            lifecycleError = ex;
-        }
-    });
-    lifecycleThread.SetApartmentState(ApartmentState.STA);
-    lifecycleThread.Start();
-    var lifecycleJoined = lifecycleThread.Join(TimeSpan.FromSeconds(15));
-    Check("window close hides to tray", lifecycleJoined && closeToTrayWorked, lifecycleError?.ToString());
-    Check("explicit tray exit terminates app loop", lifecycleJoined && lifecycleCompleted, lifecycleError?.ToString());
+                var app = new MidiMute.App();
+                app.InitializeComponent();
+                app.Startup += (_, _) => app.Dispatcher.BeginInvoke(() =>
+                {
+                    var window = MidiMute.App.MainWin!;
+                    window.Close();
+                    closeToTrayWorked = !window.IsVisible;
+                    window.ExitApplication();
+                });
+                app.Run();
+                lifecycleCompleted = true;
+            }
+            catch (Exception ex)
+            {
+                lifecycleError = ex;
+            }
+        });
+        lifecycleThread.SetApartmentState(ApartmentState.STA);
+        lifecycleThread.Start();
+        var lifecycleJoined = lifecycleThread.Join(TimeSpan.FromSeconds(15));
+        Check("window close hides to tray", lifecycleJoined && closeToTrayWorked, lifecycleError?.ToString());
+        Check("explicit tray exit terminates app loop", lifecycleJoined && lifecycleCompleted, lifecycleError?.ToString());
+    }
 }
 finally
 {

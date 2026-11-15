@@ -26,6 +26,7 @@ MidiMute is a small Windows utility for binding MIDI keys to per-app audio actio
 - Dark, light, and system theme modes.
 - Russian and English interface languages.
 - Optional start with Windows.
+- Compact click-through audio overlay for mute, unmute, and volume changes, including hold/release actions.
 - Portable self-contained Windows build.
 
 ## Download
@@ -59,6 +60,10 @@ Diagnostic logs are written to:
 ```text
 %AppData%\MidiMute\diagnostic.log
 ```
+
+Audio actions show a compact overlay in the bottom-right corner of the monitor containing the mouse pointer. Repeated actions update the same card; it disappears after 1.6 seconds of inactivity. The overlay follows the app theme, does not take keyboard focus, and lets mouse clicks pass through. Exclusive fullscreen games may cover it.
+
+To switch to another portable build, exit MidiMute through its tray menu before starting the new executable. Existing settings are loaded from the same AppData folder automatically.
 
 ## Build From Source
 

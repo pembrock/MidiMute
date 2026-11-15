@@ -11,6 +11,7 @@ namespace MidiMute
     public partial class MainWindow : Window
     {
         private readonly AudioService _audio = new();
+        private readonly AudioOverlay _overlay = new();
         private readonly MidiService _midi = new();
         private readonly DispatcherTimer _audioSessionRefreshTimer = new();
         private readonly ObservableCollection<AppSession> _sessions = new();
@@ -429,7 +430,11 @@ namespace MidiMute
                         }
 
                         if (bindingExecuted)
+                        {
                             HighlightMidiAction(session, binding);
+                            _overlay.Present(session, binding.Action is BindingAction.VolumeUp or BindingAction.VolumeDown
+                                or BindingAction.SetVolume or BindingAction.HoldVolume);
+                        }
 
                         // Обновляем слайдер если это выбранное приложение
                         if (_selected?.ProcessName == session.ProcessName)
@@ -519,6 +524,7 @@ namespace MidiMute
                 _audio.SetMute(session.ProcessName, wasMuted);
 
             session.IsMuted = wasMuted;
+            _overlay.Present(session, volumeAction: false);
 
             if (_selected?.ProcessName == session.ProcessName)
                 RefreshDetail();
@@ -562,6 +568,7 @@ namespace MidiMute
                 _audio.SetVolume(session.ProcessName, previousVolume);
 
             session.Volume = Math.Clamp(previousVolume, 0, 100);
+            _overlay.Present(session, volumeAction: true);
 
             if (_selected?.ProcessName == session.ProcessName)
                 UpdateVolumeDisplay(session.Volume);
@@ -752,6 +759,7 @@ namespace MidiMute
 
             RefreshDetail();
             var idx = AppListBox.SelectedIndex;
+            _overlay.Present(_selected, volumeAction: false);
             AppListBox.Items.Refresh();
             AppListBox.SelectedIndex = idx;
         }
@@ -812,6 +820,12 @@ namespace MidiMute
                         _audio.SetMasterVolume(volume);
                     else
                         _audio.SetVolume(processName, volume);
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        var session = _sessions.FirstOrDefault(s => s.ProcessName == processName);
+                        if (session != null && Math.Abs(session.Volume - volume) < 0.01f)
+                            _overlay.Present(session, volumeAction: true);
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -1376,6 +1390,7 @@ namespace MidiMute
         protected override void OnClosed(EventArgs e)
         {
             _audioSessionRefreshTimer.Stop();
+            _overlay.Close();
             StopHighlightTimers();
             SaveState();
             _midi.Dispose();

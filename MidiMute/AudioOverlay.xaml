@@ -1,0 +1,30 @@
+<Window x:Class="MidiMute.AudioOverlay"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Width="308" Height="104" WindowStyle="None" ResizeMode="NoResize"
+        AllowsTransparency="True" Background="Transparent" ShowInTaskbar="False"
+        ShowActivated="False" Topmost="True" Focusable="False"
+        IsHitTestVisible="False" WindowStartupLocation="Manual">
+    <Border Margin="6" Padding="18,14" CornerRadius="16"
+            Background="{DynamicResource BgSecondary}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+        <Grid>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="38"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <Grid Grid.RowSpan="2" VerticalAlignment="Center" Margin="0,0,12,0">
+                <Image x:Name="AppIcon" Width="25" Height="25" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <TextBlock x:Name="FallbackIcon" Text="&#xE767;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                           FontSize="23" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center"/>
+            </Grid>
+            <TextBlock x:Name="AppName" Grid.Column="1" FontFamily="Segoe UI" FontSize="13" FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextPrimary}" TextTrimming="CharacterEllipsis"/>
+            <Grid Grid.Column="1" Grid.Row="1" Margin="0,4,0,0">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <TextBlock x:Name="Status" FontSize="12" Foreground="{DynamicResource TextSecondary}"/>
+                <TextBlock x:Name="Percentage" Grid.Column="1" FontSize="12" Foreground="{DynamicResource TextPrimary}"/>
+            </Grid>
+            <Border Grid.Row="2" Grid.ColumnSpan="2" Height="3" VerticalAlignment="Bottom" CornerRadius="1.5" Background="{DynamicResource BorderBrush}">
+                <Border x:Name="Level" CornerRadius="1.5" HorizontalAlignment="Left" Background="{DynamicResource AccentBrush}"/>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
