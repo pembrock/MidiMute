@@ -149,4 +149,7 @@
     <sys:String x:Key="Tray.MidiConnectedFormat">MIDI: {0} connected</sys:String>
     <sys:String x:Key="Tray.BypassOn">▶ Bypass — on</sys:String>
     <sys:String x:Key="Tray.BypassOff">⏸ Bypass — off</sys:String>
+    <sys:String x:Key="Overlay.Muted">Muted</sys:String>
+    <sys:String x:Key="Overlay.Unmuted">Sound on</sys:String>
+    <sys:String x:Key="Overlay.Volume">Volume</sys:String>
 </ResourceDictionary>

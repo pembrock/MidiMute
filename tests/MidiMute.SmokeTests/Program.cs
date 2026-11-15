@@ -1,3 +1,4 @@
+using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -37,15 +38,28 @@ try
         }
     };
     var master = new AppSession { ProcessName = "__master__", DisplayName = "System" };
-    storage.Export(exportPath, new[] { session, master }, true, "Device A", new[] { "HiddenApp" }, Array.Empty<SavedAppProfile>(), AppThemeMode.Dark, AppLanguageMode.English);
+    storage.Export(exportPath, new[] { session, master }, true, "Device A", new[] { "HiddenApp" }, Array.Empty<SavedAppProfile>(), AppThemeMode.Dark, AppLanguageMode.English, null);
     var roundTrip = storage.Import(exportPath);
     Check("settings round-trip", roundTrip.BypassEnabled && roundTrip.MidiDeviceName == "Device A" && roundTrip.Sessions.Single().Bindings.Single().VolumeStep == 7);
     Check("hidden app round-trip", roundTrip.HiddenProcessNames.SequenceEqual(new[] { "HiddenApp" }));
     Check("theme/language round-trip", roundTrip.AppThemeMode == AppThemeMode.Dark && roundTrip.AppLanguageMode == AppLanguageMode.English);
     Check("master excluded from app-profile cache", roundTrip.AppProfiles.All(profile => profile.ProcessName != "__master__"));
 
+    var restartExport = Path.Combine(temp, "restart-settings.json");
+    var restartSession = new AppSession
+    {
+        ProcessName = "__master__",
+        DisplayName = "System",
+        Bindings = new() { new() { NoteNumber = 61, Action = BindingAction.RestartAudioDevice } }
+    };
+    storage.Export(restartExport, new[] { restartSession }, false, "Device A", Array.Empty<string>(),
+        Array.Empty<SavedAppProfile>(), AppThemeMode.Dark, AppLanguageMode.Russian, "USB\\TEST_DEVICE");
+    var restartRoundTrip = storage.Import(restartExport);
+    Check("restart device selection round-trip", restartRoundTrip.RestartAudioDeviceInstanceId == "USB\\TEST_DEVICE");
+    Check("restart binding round-trip", restartRoundTrip.Sessions.Single().Bindings.Single().Action == BindingAction.RestartAudioDevice);
+
     var emptyExport = Path.Combine(temp, "empty-export.json");
-    storage.Export(emptyExport, Array.Empty<AppSession>(), false, null, Array.Empty<string>(), Array.Empty<SavedAppProfile>(), AppThemeMode.Auto, AppLanguageMode.Auto);
+    storage.Export(emptyExport, Array.Empty<AppSession>(), false, null, Array.Empty<string>(), Array.Empty<SavedAppProfile>(), AppThemeMode.Auto, AppLanguageMode.Auto, null);
     Check("empty app-generated export imports", storage.Import(emptyExport).Sessions.Count == 0);
 
     var emptyObject = Path.Combine(temp, "empty-object.json");
@@ -103,35 +117,42 @@ try
     var appSource = File.ReadAllText(Path.Combine(repo, "MidiMute", "App.xaml.cs"));
     Check("tray bypass-off uses system menu text", appSource.Contains("SystemColors.MenuTextBrush"));
 
-    var lifecycleCompleted = false;
-    var closeToTrayWorked = false;
-    Exception? lifecycleError = null;
-    var lifecycleThread = new Thread(() =>
+    if (args.Contains("--overlay"))
+        OverlayChecks.Run(repo, Check);
+
+    // Explicit opt-in: starting the real application touches the user's MIDI and settings.
+    if (args.Contains("--lifecycle"))
     {
-        try
+        var lifecycleCompleted = false;
+        var closeToTrayWorked = false;
+        Exception? lifecycleError = null;
+        var lifecycleThread = new Thread(() =>
         {
-            var app = new MidiMute.App();
-            app.InitializeComponent();
-            app.Startup += (_, _) => app.Dispatcher.BeginInvoke(() =>
+            try
             {
-                var window = MidiMute.App.MainWin!;
-                window.Close();
-                closeToTrayWorked = !window.IsVisible;
-                window.ExitApplication();
-            });
-            app.Run();
-            lifecycleCompleted = true;
-        }
-        catch (Exception ex)
-        {
-            lifecycleError = ex;
-        }
-    });
-    lifecycleThread.SetApartmentState(ApartmentState.STA);
-    lifecycleThread.Start();
-    var lifecycleJoined = lifecycleThread.Join(TimeSpan.FromSeconds(15));
-    Check("window close hides to tray", lifecycleJoined && closeToTrayWorked, lifecycleError?.ToString());
-    Check("explicit tray exit terminates app loop", lifecycleJoined && lifecycleCompleted, lifecycleError?.ToString());
+                var app = new MidiMute.App();
+                app.InitializeComponent();
+                app.Startup += (_, _) => app.Dispatcher.BeginInvoke(() =>
+                {
+                    var window = MidiMute.App.MainWin!;
+                    window.Close();
+                    closeToTrayWorked = !window.IsVisible;
+                    window.ExitApplication();
+                });
+                app.Run();
+                lifecycleCompleted = true;
+            }
+            catch (Exception ex)
+            {
+                lifecycleError = ex;
+            }
+        });
+        lifecycleThread.SetApartmentState(ApartmentState.STA);
+        lifecycleThread.Start();
+        var lifecycleJoined = lifecycleThread.Join(TimeSpan.FromSeconds(15));
+        Check("window close hides to tray", lifecycleJoined && closeToTrayWorked, lifecycleError?.ToString());
+        Check("explicit tray exit terminates app loop", lifecycleJoined && lifecycleCompleted, lifecycleError?.ToString());
+    }
 }
 finally
 {

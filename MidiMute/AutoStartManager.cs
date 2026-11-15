@@ -38,9 +38,13 @@ namespace MidiMute
             if (string.IsNullOrWhiteSpace(configuredPath))
                 return;
 
-            if (File.Exists(configuredPath) &&
-                string.Equals(configuredPath, GetCurrentExecutablePath(), StringComparison.OrdinalIgnoreCase))
+            if (File.Exists(configuredPath))
+            {
+                // Preserve an enabled autostart when the portable build moves to a new folder.
+                if (!string.Equals(configuredPath, GetCurrentExecutablePath(), StringComparison.OrdinalIgnoreCase))
+                    Enable();
                 return;
+            }
 
             Disable();
         }
